@@ -2,7 +2,7 @@
 
 namespace Differ\Differ;
 
-function genDiff(string $firstFile, string $secondFile): void
+function genDiff(string $firstFile, string $secondFile): string
 {
     $firstArray = convertToArray($firstFile);
     $secondArray = convertToArray($secondFile);
@@ -31,7 +31,7 @@ function genDiff(string $firstFile, string $secondFile): void
 
     $resultString = implode("\n", $result);
 
-    print_r("{\n{$resultString}\n}\n");
+    return "{\n{$resultString}\n}\n";
 }
 
 function getLine(string $symbol, string $key, string $value): string

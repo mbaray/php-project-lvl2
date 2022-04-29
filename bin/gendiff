@@ -23,5 +23,5 @@ DOC;
 $args = Docopt::handle($doc, ['version' => '1']);
 
 if ($args['--format'] === 'stylish') {
-  genDiff($args['<firstFile>'], $args['<secondFile>']);
+  print_r(genDiff($args['<firstFile>'], $args['<secondFile>']));
 }
