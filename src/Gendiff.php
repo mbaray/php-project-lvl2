@@ -1,6 +1,8 @@
 <?php
 
-namespace Differ\Differ;
+namespace Differ\GenDiff;
+
+use function Differ\Parsers\parse;
 
 function genDiff(string $firstFile, string $secondFile): string
 {
@@ -34,6 +36,14 @@ function genDiff(string $firstFile, string $secondFile): string
     return "{\n{$resultString}\n}\n";
 }
 
+function convertToArray(string $path): array
+{
+    $fileСontent = file_get_contents($path);
+    [, $type] = explode('.', $path);
+
+    return parse($fileСontent, $type);
+}
+
 function getLine(string $symbol, string $key, string $value): string
 {
     return "  {$symbol} {$key}: {$value}";
@@ -42,11 +52,4 @@ function getLine(string $symbol, string $key, string $value): string
 function toString($value): string
 {
     return trim(var_export($value, true), "'");
-}
-
-function convertToArray(string $fileName): array
-{
-    $file = file_get_contents($fileName);
-
-    return json_decode($file, true);
 }
