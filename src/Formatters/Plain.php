@@ -24,8 +24,8 @@ function plain(array $keys, array $arr1, array $arr2): string
                         $acc .= $iter($value, $path, $part1[$key], $part2[$key]);
                     }
                 } elseif (($inArr1 && $inArr2) && ($part1[$key] !== $part2[$key])) {
-                    $val1 = is_array($part1[$key]) ? '[complex value]': toString($part1[$key]);
-                    $val2 = is_array($part2[$key]) ? '[complex value]': toString($part2[$key]);
+                    $val1 = is_array($part1[$key]) ? '[complex value]' : toString($part1[$key]);
+                    $val2 = is_array($part2[$key]) ? '[complex value]' : toString($part2[$key]);
 
                     $acc .= "Property '{$path}' was updated. From {$val1} to {$val2}\n";
                 } else {
