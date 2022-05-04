@@ -6,7 +6,10 @@
     "autoload": {
         "files": [
             "src/Differ/Gendiff.php",
-            "src/Parsers/Parsers.php"
+            "src/Parsers/Parsers.php",
+            "src/Formatters.php",
+            "src/Formatters/Stylish.php",
+            "src/Formatters/Plain.php"
         ]
     },
     "authors": [
