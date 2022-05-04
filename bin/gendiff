@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use function Differ\GenDiff\genDiff;
+use function Differ\Differ\genDiff;
 
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -29,6 +29,5 @@ DOC;
 
 $args = Docopt::handle($doc, ['version' => '1']);
 
-if ($args['--format'] === 'stylish') {
-  print_r(genDiff($args['<firstFile>'], $args['<secondFile>']));
-}
+$diff = genDiff($args['<firstFile>'], $args['<secondFile>'], $args['--format']);
+print_r($diff);
