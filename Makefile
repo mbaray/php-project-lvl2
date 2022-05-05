@@ -16,5 +16,8 @@ test-coverage:
 stylish:
 	bin/gendiff tests/fixtures/json/file1.json tests/fixtures/json/file2.json
 
+plain:
+	bin/gendiff --format plain tests/fixtures/json/file1.json tests/fixtures/json/file2.json
+
 json:
 	bin/gendiff --format json tests/fixtures/json/file1.json tests/fixtures/json/file2.json
