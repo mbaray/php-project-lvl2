@@ -16,6 +16,10 @@ class GenDiffTest extends TestCase
         $actualPlain = genDiff('tests/fixtures/json/file1.json', 'tests/fixtures/json/file2.json', 'plain');
         $expectedPlain = file_get_contents('./tests/fixtures/expectedPlain.txt');
         $this->assertEquals($expectedPlain, $actualPlain);
+
+        $actualJson = genDiff('tests/fixtures/json/file1.json', 'tests/fixtures/json/file2.json', 'json');
+        $expectedJson = file_get_contents('./tests/fixtures/expectedJson.json');
+        $this->assertEquals(json_decode($expectedJson), json_decode($actualJson));
     }
 
     public function testGenDiffYaml()

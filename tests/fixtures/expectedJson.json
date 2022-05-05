@@ -1,0 +1,144 @@
+[
+  {
+    "name": "common",
+    "value": [
+      {
+        "name": "follow",
+        "value": "false",
+        "type": "added"
+      },
+      {
+        "name": "setting1",
+        "value": "Value 1",
+        "type": "unaltered"
+      },
+      {
+        "name": "setting2",
+        "value": "200",
+        "type": "deleted"
+      },
+      {
+        "name": "setting3",
+        "oldValue": "true",
+        "newValue": "NULL",
+        "type": "updated"
+      },
+      {
+        "name": "setting4",
+        "value": "blah blah",
+        "type": "added"
+      },
+      {
+        "name": "setting5",
+        "value": [
+          {
+            "name": "key5",
+            "value": "value5"
+          }
+        ],
+        "type": "added"
+      },
+      {
+        "name":
+        "setting6",
+        "value": [
+          {
+            "name": "doge",
+            "value": [
+              {
+                "name": "wow",
+                "oldValue": "",
+                "newValue": "so much",
+                "type": "updated"
+              }
+            ],
+            "type": "unaltered"
+            },
+            {
+              "name": "key",
+              "value": "value",
+              "type": "unaltered"
+            },
+            {
+              "name": "ops",
+              "value": "vops",
+              "type": "added"
+            }
+          ],
+          "type": "unaltered"
+        }
+      ],
+      "type": "unaltered"
+    },
+    {
+      "name": "group1",
+      "value": [
+        {
+          "name": "baz",
+          "oldValue": "bas",
+          "newValue": "bars",
+          "type": "updated"
+        },
+        {
+          "name": "foo",
+          "value": "bar",
+          "type": "unaltered"
+        },
+        {
+          "name": "nest",
+          "oldValue": [
+            {
+              "name": "key",
+              "value": "value"
+            }
+          ],
+          "newValue": "str",
+          "type": "updated"
+        }
+      ],
+      "type": "unaltered"
+    },
+    {
+      "name": "group2",
+      "value": [
+        {
+          "name": "abc",
+          "value": "12345"
+        },
+        {
+          "name": "deep",
+          "value": [
+            {
+              "name": "id",
+              "value": "45"
+            }
+          ]
+        }
+      ],
+      "type": "deleted"
+    },
+    {
+      "name": "group3",
+      "value": [
+        {
+          "name": "deep",
+          "value": [
+            {
+              "name": "id",
+              "value": [
+                {
+                  "name": "number",
+                  "value": "45"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "fee",
+          "value": "100500"
+        }
+      ],
+      "type": "added"
+    }
+]

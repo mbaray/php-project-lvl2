@@ -4,6 +4,7 @@ namespace Formatters;
 
 use function Differ\Formatters\Stylish\stylish;
 use function Differ\Formatters\Plain\plain;
+use function Differ\Formatters\Json\json;
 
 function formatterSelection(string $formatName, array $keys, array $arr1, array $arr2): string
 {
@@ -13,5 +14,8 @@ function formatterSelection(string $formatName, array $keys, array $arr1, array 
 
         case 'plain':
             return plain($keys, $arr1, $arr2);
+
+        case 'json':
+            return json($keys, $arr1, $arr2);
     }
 }
