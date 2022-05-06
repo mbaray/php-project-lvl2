@@ -19,10 +19,11 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                 $name = $key;
 
                 if ($check === false) {
-                    $acc[] = [
+                    $newAcc = [
                         "name" => $name,
                         "value" => $iter($culVal),
                     ];
+                    $acc[] = $newAcc;
 
                     return $acc;
                 }
