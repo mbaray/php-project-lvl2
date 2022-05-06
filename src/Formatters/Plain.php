@@ -20,11 +20,17 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                     $str = is_array($value) ? '[complex value]' : toStringTxt($value);
 
                     return array_merge($acc, ["Property '{$newPath}' was added with value: {$str}"]);
-                } elseif (!$inArr2) {
+                }
+
+                if (!$inArr2) {
                     return array_merge($acc, ["Property '{$newPath}' was removed"]);
-                } elseif (is_array($value) && is_array($partArr1[$key])) {
+                }
+
+                if (is_array($value) && is_array($partArr1[$key])) {
                     return array_merge($acc, $iter($value, $newPath, $partArr1[$key], $partArr2[$key]));
-                } elseif ($partArr1[$key] !== $partArr2[$key]) {
+                }
+
+                if ($partArr1[$key] !== $partArr2[$key]) {
                     $str1 = is_array($partArr1[$key]) ? '[complex value]' : toStringTxt($partArr1[$key]);
                     $str2 = is_array($partArr2[$key]) ? '[complex value]' : toStringTxt($partArr2[$key]);
 

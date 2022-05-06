@@ -23,28 +23,31 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                 $getLine = fn($curVal, $symbol) => "{$indent}  {$symbol} {$key}: {$iter($curVal, $depth + 1)}";
 
                 if ($check === false) {
-                    $acc[] = $getLine($value, ' ');
-                    return $acc;
+                    return array_merge($acc, [$getLine($value, ' ')]);
                 }
 
                 $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
                 $inArr2 = is_array($partArr2) && array_key_exists($key, $partArr2);
 
                 if (!$inArr1) {
-                    $acc[] = $getLine($value, '+');
-                } elseif (!$inArr2) {
-                    $acc[] = $getLine($value, '-');
-                } elseif (is_array($value) && is_array($partArr1[$key])) {
-                    $funcIter = $iter($value, $depth + 1, true, $partArr1[$key], $partArr2[$key]);
-                    $acc[] = "{$indent}    {$key}: {$funcIter}";
-                } elseif ($partArr1[$key] !== $partArr2[$key]) {
-                    $acc[] = $getLine($partArr1[$key], '-');
-                    $acc[] = $getLine($partArr2[$key], '+');
-                } else {
-                    $acc[] = $getLine($value, ' ');
+                    return array_merge($acc, [$getLine($value, '+')]);
                 }
 
-                return $acc;
+                if (!$inArr2) {
+                    return array_merge($acc, [$getLine($value, '-')]);
+                }
+
+                if (is_array($value) && is_array($partArr1[$key])) {
+                    $funcIter = $iter($value, $depth + 1, true, $partArr1[$key], $partArr2[$key]);
+
+                    return array_merge($acc, ["{$indent}    {$key}: {$funcIter}"]);
+                }
+
+                if ($partArr1[$key] !== $partArr2[$key]) {
+                    return array_merge($acc, [$getLine($partArr1[$key], '-')], [$getLine($partArr2[$key], '+')]);
+                }
+
+                return array_merge($acc, [$getLine($value, ' ')]);
             },
             []
         );

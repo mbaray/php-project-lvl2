@@ -18,12 +18,12 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                 $name = $key;
 
                 if ($check === false) {
-                    $acc[] = [
+                    $child = [
                         "name" => $name,
                         "value" => $iter($culVal),
                     ];
 
-                    return $acc;
+                    return array_merge($acc, [$child]);
                 }
 
                 $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
@@ -39,26 +39,26 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                     $value = $iter($culVal, true, $partArr1[$key], $partArr2[$key]);
                     $type = "unaltered";
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {
-                    $acc[] = [
+                    $child = [
                         "name" => $name,
                         "oldValue" => $iter($partArr1[$key]),
                         "newValue" => $iter($partArr2[$key]),
                         "type" => "updated"
                     ];
 
-                    return $acc;
+                    return array_merge($acc, [$child]);
                 } else {
                     $value = $currentValue[$key];
                     $type = "unaltered";
                 }
 
-                $acc[] = [
+                $child = [
                     "name" => $name,
                     "value" => $value,
                     "type" => $type
                 ];
 
-                return $acc;
+                return array_merge($acc, [$child]);
             },
             []
         );
