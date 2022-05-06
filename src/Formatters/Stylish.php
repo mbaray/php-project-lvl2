@@ -20,6 +20,7 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
             array_keys($currentValue),
             function ($acc, $key) use (&$iter, $depth, $check, $indent, $currentValue, $partArr1, $partArr2) {
                 $value = $currentValue[$key];
+                
                 $getLine = fn($curVal, $symbol) => "{$indent}  {$symbol} {$key}: {$iter($curVal, ++$depth)}";
 
                 if ($check === false) {
@@ -34,7 +35,7 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                     $acc[] = $getLine($value, '+');
                 } elseif (!$inArr2) {
                     $acc[] = $getLine($value, '-');
-                } elseif (is_array($value)) {
+                } elseif (is_array($value) && is_array($partArr1[$key])) {
                     $funcIter = $iter($value, ++$depth, true, $partArr1[$key], $partArr2[$key]);
                     $acc[] = "{$indent}    {$key}: {$funcIter}";
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {

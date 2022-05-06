@@ -36,7 +36,7 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                 } elseif (!$inArr2) {
                     $value = $iter($value);
                     $type = "deleted";
-                } elseif (is_array($value)) {
+                } elseif (is_array($value) && is_array($partArr1[$key])) {
                     $value = $iter($value, true, $partArr1[$key], $partArr2[$key]);
                     $type = "unaltered";
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {

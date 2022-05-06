@@ -22,7 +22,7 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                     $acc[] = "Property '{$path}' was added with value: {$str}";
                 } elseif (!$inArr2) {
                     $acc[] = "Property '{$path}' was removed";
-                } elseif (is_array($value)) {
+                } elseif (is_array($value) && is_array($partArr1[$key])) {
                     $acc = array_merge($acc, $iter($value, $path, $partArr1[$key], $partArr2[$key]));
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {
                     $str1 = is_array($partArr1[$key]) ? '[complex value]' : toStringTxt($partArr1[$key]);
