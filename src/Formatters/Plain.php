@@ -2,55 +2,47 @@
 
 namespace Differ\Formatters\Plain;
 
-function plain(array $keys, array $arr1, array $arr2): string
-{
-    $iter = function ($currentValue, $path, $part1 = [], $part2 = []) use (&$iter) {
+use function Differ\Differ\toString;
 
-        $result = array_reduce(
+function formatting(array $replacedArray, array $arr1, array $arr2): string
+{
+    $iter = function ($currentValue, $path, $partArr1 = [], $partArr2 = []) use (&$iter) {
+        return array_reduce(
             array_keys($currentValue),
-            function ($acc, $key) use (&$iter, $path, $currentValue, $part1, $part2) {
-                $path = ($path === '') ? "$key" : "$path.$key";
+            function ($acc, $key) use (&$iter, $path, $currentValue, $partArr1, $partArr2) {
+                $path = ($path === '') ? "{$key}" : "{$path}.{$key}";
                 $value = $currentValue[$key];
 
-                $inArr1 = array_key_exists($key, $part1);
-                $inArr2 = array_key_exists($key, $part2);
+                $inArr1 = array_key_exists($key, $partArr1);
+                $inArr2 = array_key_exists($key, $partArr2);
 
-                if (is_array($value)) {
-                    if (!$inArr1) {
-                        $acc .= "Property '{$path}' was added with value: [complex value]\n";
-                    } elseif (!$inArr2) {
-                        $acc .= "Property '{$path}' was removed\n";
-                    } else {
-                        $acc .= $iter($value, $path, $part1[$key], $part2[$key]);
-                    }
-                } elseif (($inArr1 && $inArr2) && ($part1[$key] !== $part2[$key])) {
-                    $val1 = is_array($part1[$key]) ? '[complex value]' : toString($part1[$key]);
-                    $val2 = is_array($part2[$key]) ? '[complex value]' : toString($part2[$key]);
+                if (!$inArr1) {
+                    $str = is_array($value) ? '[complex value]' : toStringTxt($value);
 
-                    $acc .= "Property '{$path}' was updated. From {$val1} to {$val2}\n";
-                } else {
-                    if (!$inArr1) {
-                        $val = toString($value);
-                        $acc .= "Property '{$path}' was added with value: {$val}\n";
-                    } elseif (!$inArr2) {
-                        $acc .= "Property '{$path}' was removed\n";
-                    }
+                    $acc .= "Property '{$path}' was added with value: {$str}\n";
+                } elseif (!$inArr2) {
+                    $acc .= "Property '{$path}' was removed\n";
+                } elseif (is_array($value)) {
+                    $acc .= $iter($value, $path, $partArr1[$key], $partArr2[$key]);
+                } elseif ($partArr1[$key] !== $partArr2[$key]) {
+                    $str1 = is_array($partArr1[$key]) ? '[complex value]' : toStringTxt($partArr1[$key]);
+                    $str2 = is_array($partArr2[$key]) ? '[complex value]' : toStringTxt($partArr2[$key]);
+
+                    $acc .= "Property '{$path}' was updated. From {$str1} to {$str2}\n";
                 }
 
                 return $acc;
             },
             ''
         );
-
-        return $result;
     };
 
-    return $iter($keys, '', $arr1, $arr2);
+    return $iter($replacedArray, '', $arr1, $arr2);
 }
 
-function toString($value): string
+function toStringTxt($value): string
 {
-    $string = trim(var_export($value, true), "'");
+    $string = toString($value);
 
     return is_string($value) ? "'{$string}'" : $string;
 }

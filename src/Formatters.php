@@ -2,20 +2,10 @@
 
 namespace Formatters;
 
-use function Differ\Formatters\Stylish\stylish;
-use function Differ\Formatters\Plain\plain;
-use function Differ\Formatters\Json\json;
-
-function formatterSelection(string $formatName, array $keys, array $arr1, array $arr2): string
+function formatterSelection(string $formatName, array $replacedArray, array $arr1, array $arr2): string
 {
-    switch ($formatName) {
-        case 'stylish':
-            return stylish($keys, $arr1, $arr2);
+    /** @var callable $getFormatting */
+    $getFormatting = "\\Differ\\Formatters\\{$formatName}\\formatting";
 
-        case 'plain':
-            return plain($keys, $arr1, $arr2);
-
-        case 'json':
-            return json($keys, $arr1, $arr2);
-    }
+    return $getFormatting($replacedArray, $arr1, $arr2);
 }
