@@ -32,6 +32,6 @@ class GenDiffTest extends TestCase
     public function testGenDiffWrongFormat()
     {
         $actual = genDiff('./tests/fixtures/expectedStylish.txt', './tests/fixtures/expectedStylish.txt', 'stylish');
-        $this->assertEquals("{\n}\n", $actual);
+        $this->assertEquals("{\n}", $actual);
     }
 }

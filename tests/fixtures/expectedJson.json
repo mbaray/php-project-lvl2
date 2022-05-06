@@ -20,7 +20,7 @@
       {
         "name": "setting3",
         "oldValue": "true",
-        "newValue": "NULL",
+        "newValue": "null",
         "type": "updated"
       },
       {
@@ -39,8 +39,7 @@
         "type": "added"
       },
       {
-        "name":
-        "setting6",
+        "name": "setting6",
         "value": [
           {
             "name": "doge",

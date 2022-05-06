@@ -18,7 +18,9 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $formatName = 
 
 function toString($value): string
 {
-    return trim(var_export($value, true), "'");
+    $exportString = var_export($value, true);
+
+    return is_string($value) ? $value : trim(mb_strtolower($exportString), "'");
 }
 
 function pathToArray(string $path): array

@@ -27,8 +27,8 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                     return $acc;
                 }
 
-                $inArr1 = array_key_exists($key, $partArr1);
-                $inArr2 = array_key_exists($key, $partArr2);
+                $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
+                $inArr2 = is_array($partArr2) && array_key_exists($key, $partArr2);
 
                 if (!$inArr1) {
                     $value = $iter($value);
@@ -66,5 +66,5 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
     };
     $result = $iter($replacedArray, true, $arr1, $arr2);
 
-    return json_encode($result) . "\n";
+    return json_encode($result);
 }

@@ -13,31 +13,32 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                 $path = ($path === '') ? "{$key}" : "{$path}.{$key}";
                 $value = $currentValue[$key];
 
-                $inArr1 = array_key_exists($key, $partArr1);
-                $inArr2 = array_key_exists($key, $partArr2);
+                $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
+                $inArr2 = is_array($partArr2) && array_key_exists($key, $partArr2);
 
                 if (!$inArr1) {
                     $str = is_array($value) ? '[complex value]' : toStringTxt($value);
 
-                    $acc .= "Property '{$path}' was added with value: {$str}\n";
+                    $acc[] = "Property '{$path}' was added with value: {$str}";
                 } elseif (!$inArr2) {
-                    $acc .= "Property '{$path}' was removed\n";
+                    $acc[] = "Property '{$path}' was removed";
                 } elseif (is_array($value)) {
-                    $acc .= $iter($value, $path, $partArr1[$key], $partArr2[$key]);
+                    $acc = array_merge($acc, $iter($value, $path, $partArr1[$key], $partArr2[$key]));
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {
                     $str1 = is_array($partArr1[$key]) ? '[complex value]' : toStringTxt($partArr1[$key]);
                     $str2 = is_array($partArr2[$key]) ? '[complex value]' : toStringTxt($partArr2[$key]);
 
-                    $acc .= "Property '{$path}' was updated. From {$str1} to {$str2}\n";
+                    $acc[] = "Property '{$path}' was updated. From {$str1} to {$str2}";
                 }
 
                 return $acc;
             },
-            ''
+            []
         );
     };
+    $result = $iter($replacedArray, '', $arr1, $arr2);
 
-    return $iter($replacedArray, '', $arr1, $arr2);
+    return implode("\n", $result);
 }
 
 function toStringTxt($value): string

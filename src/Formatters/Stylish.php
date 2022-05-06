@@ -27,29 +27,21 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                     return $acc;
                 }
 
-                $inArr1 = array_key_exists($key, $partArr1);
-                $inArr2 = array_key_exists($key, $partArr2);
+                $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
+                $inArr2 = is_array($partArr2) && array_key_exists($key, $partArr2);
 
-                if (is_array($value)) {
-                    if (!$inArr1) {
-                        $acc[] = $getLine($value, '+');
-                    } elseif (!$inArr2) {
-                        $acc[] = $getLine($value, '-');
-                    } else {
-                        $value = $iter($value, ++$depth, true, $partArr1[$key], $partArr2[$key]);
-                        $acc[] = "{$indent}    {$key}: {$value}";
-                    }
-                } elseif (($inArr1 && $inArr2) && ($partArr1[$key] !== $partArr2[$key])) {
+                if (!$inArr1) {
+                    $acc[] = $getLine($value, '+');
+                } elseif (!$inArr2) {
+                    $acc[] = $getLine($value, '-');
+                } elseif (is_array($value)) {
+                    $funcIter = $iter($value, ++$depth, true, $partArr1[$key], $partArr2[$key]);
+                    $acc[] = "{$indent}    {$key}: {$funcIter}";
+                } elseif ($partArr1[$key] !== $partArr2[$key]) {
                     $acc[] = $getLine($partArr1[$key], '-');
                     $acc[] = $getLine($partArr2[$key], '+');
                 } else {
-                    if (!$inArr1) {
-                        $acc[] = $getLine($value, '+');
-                    } elseif (!$inArr2) {
-                        $acc[] = $getLine($value, '-');
-                    } else {
-                        $acc[] = $getLine($value, ' ');
-                    }
+                    $acc[] = $getLine($value, ' ');
                 }
 
                 return $acc;
@@ -61,5 +53,5 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
         return implode("\n", $result);
     };
 
-    return $iter($replacedArray, 1, true, $arr1, $arr2) . "\n";
+    return $iter($replacedArray, 1, true, $arr1, $arr2);
 }
