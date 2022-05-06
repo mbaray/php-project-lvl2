@@ -19,16 +19,16 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                 if (!$inArr1) {
                     $str = is_array($value) ? '[complex value]' : toStringTxt($value);
 
-                    $acc[] = "Property '{$newPath}' was added with value: {$str}";
+                    return array_merge($acc, ["Property '{$newPath}' was added with value: {$str}"]);
                 } elseif (!$inArr2) {
-                    $acc[] = "Property '{$newPath}' was removed";
+                    return array_merge($acc, ["Property '{$newPath}' was removed"]);
                 } elseif (is_array($value) && is_array($partArr1[$key])) {
-                    $acc = array_merge($acc, $iter($value, $newPath, $partArr1[$key], $partArr2[$key]));
+                    return array_merge($acc, $iter($value, $newPath, $partArr1[$key], $partArr2[$key]));
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {
                     $str1 = is_array($partArr1[$key]) ? '[complex value]' : toStringTxt($partArr1[$key]);
                     $str2 = is_array($partArr2[$key]) ? '[complex value]' : toStringTxt($partArr2[$key]);
 
-                    $acc[] = "Property '{$newPath}' was updated. From {$str1} to {$str2}";
+                    return array_merge($acc, ["Property '{$newPath}' was updated. From {$str1} to {$str2}"]);
                 }
 
                 return $acc;

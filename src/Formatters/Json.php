@@ -16,15 +16,14 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
             function ($acc, $key) use (&$iter, $check, $currentValue, $partArr1, $partArr2) {
                 $culVal = $currentValue[$key];
                 $name = $key;
-                $newAcc = $acc;
 
                 if ($check === false) {
-                    $newAcc[] = [
+                    $acc[] = [
                         "name" => $name,
                         "value" => $iter($culVal),
                     ];
 
-                    return $newAcc;
+                    return $acc;
                 }
 
                 $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
