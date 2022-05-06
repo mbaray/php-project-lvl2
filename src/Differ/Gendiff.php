@@ -16,7 +16,7 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $formatName = 
     return formatterSelection($formatName, $sortReplacedArray, $firstArray, $secondArray);
 }
 
-function toString($value): string
+function toString(mixed $value): string
 {
     $exportString = var_export($value, true);
 

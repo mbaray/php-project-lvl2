@@ -21,9 +21,7 @@ function parse(string $fileСontent, string $type): array
 
 function toArrayRecursive(object $obj): array
 {
-    if (is_object($obj)) {
-        $obj = get_object_vars($obj);
-    }
+    $objVars = get_object_vars($obj);
 
-    return array_map(fn($value) => is_object($value) ? toArrayRecursive($value) : $value, $obj);
+    return array_map(fn($value) => is_object($value) ? toArrayRecursive($value) : $value, $objVars);
 }

@@ -10,7 +10,7 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
         return array_reduce(
             array_keys($currentValue),
             function ($acc, $key) use (&$iter, $path, $currentValue, $partArr1, $partArr2) {
-                $path = ($path === '') ? "{$key}" : "{$path}.{$key}";
+                $newPath = ($path === '') ? "{$key}" : "{$path}.{$key}";
                 $value = $currentValue[$key];
 
                 $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
@@ -19,16 +19,16 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
                 if (!$inArr1) {
                     $str = is_array($value) ? '[complex value]' : toStringTxt($value);
 
-                    $acc[] = "Property '{$path}' was added with value: {$str}";
+                    $acc[] = "Property '{$newPath}' was added with value: {$str}";
                 } elseif (!$inArr2) {
-                    $acc[] = "Property '{$path}' was removed";
+                    $acc[] = "Property '{$newPath}' was removed";
                 } elseif (is_array($value) && is_array($partArr1[$key])) {
-                    $acc = array_merge($acc, $iter($value, $path, $partArr1[$key], $partArr2[$key]));
+                    $acc = array_merge($acc, $iter($value, $newPath, $partArr1[$key], $partArr2[$key]));
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {
                     $str1 = is_array($partArr1[$key]) ? '[complex value]' : toStringTxt($partArr1[$key]);
                     $str2 = is_array($partArr2[$key]) ? '[complex value]' : toStringTxt($partArr2[$key]);
 
-                    $acc[] = "Property '{$path}' was updated. From {$str1} to {$str2}";
+                    $acc[] = "Property '{$newPath}' was updated. From {$str1} to {$str2}";
                 }
 
                 return $acc;
@@ -41,7 +41,7 @@ function formatting(array $replacedArray, array $arr1, array $arr2): string
     return implode("\n", $result);
 }
 
-function toStringTxt($value): string
+function toStringTxt(mixed $value): string
 {
     $string = toString($value);
 
