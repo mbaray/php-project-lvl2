@@ -2,6 +2,7 @@
 
 namespace Differ\Differ;
 
+use function Functional\sort;
 use function Differ\Parsers\parse;
 use function Formatters\formatterSelection;
 
@@ -33,7 +34,11 @@ function pathToArray(string $path): array
 
 function sortRecursive(array $arr): array
 {
-    ksort($arr);
+    $sortArr = sort(
+        $arr,
+        fn($left, $right) => strcmp(array_search($left, $arr, true), array_search($right, $arr, true)),
+        true
+    );
 
-    return array_map(fn($value) => is_array($value) ? sortRecursive($value) : $value, $arr);
+    return array_map(fn($value) => is_array($value) ? sortRecursive($value) : $value, $sortArr);
 }
