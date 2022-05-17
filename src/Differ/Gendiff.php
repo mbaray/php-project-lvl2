@@ -2,7 +2,6 @@
 
 namespace Differ\Differ;
 
-use function Functional\sort;
 use function Differ\Parsers\parse;
 use function Formatters\formatterSelection;
 
@@ -27,6 +26,11 @@ function toString(mixed $value): string
 function pathToArray(string $path): array
 {
     $fileСontent = file_get_contents($path);
+
+    if ($fileСontent === false || substr_count($path, '.') !== 1) {
+        return [];
+    }
+
     [, $type] = explode('.', $path);
 
     return parse($fileСontent, $type);
@@ -34,11 +38,7 @@ function pathToArray(string $path): array
 
 function sortRecursive(array $arr): array
 {
-    $sortArr = sort(
-        $arr,
-        fn($left, $right) => strcmp(array_search($left, $arr, true), array_search($right, $arr, true)),
-        true
-    );
+    ksort($arr);
 
-    return array_map(fn($value) => is_array($value) ? sortRecursive($value) : $value, $sortArr);
+    return array_map(fn($value) => is_array($value) ? sortRecursive($value) : $value, $arr);
 }
