@@ -28,7 +28,7 @@ function pathToArray(string $path): array
 {
     $fileContent = file_get_contents($path);
 
-    if ($fileContent === false || substr_count($path, '.') !== 1) {
+    if ($fileContent === false) {
         return [];
     }
 
