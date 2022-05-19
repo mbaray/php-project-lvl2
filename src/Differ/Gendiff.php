@@ -26,15 +26,15 @@ function toString(mixed $value): string
 
 function pathToArray(string $path): array
 {
-    $fileСontent = file_get_contents($path);
+    $fileContent = file_get_contents($path);
 
-    if ($fileСontent === false || substr_count($path, '.') !== 1) {
+    if ($fileContent === false || substr_count($path, '.') !== 1) {
         return [];
     }
 
-    [, $type] = explode('.', $path);
+    [$fileName, $type] = explode('.', $path);
 
-    return parse($fileСontent, $type);
+    return parse($fileContent, $type);
 }
 
 function sortRecursive(array $arr): array
