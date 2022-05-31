@@ -88,7 +88,7 @@ function makeAst(array $replacedArray, array $arr1, array $arr2): array
     return $result;
 }
 
-function makeType($value): string
+function makeType(mixed $value): string
 {
     return is_array($value) ? 'object' : 'simple';
 }
