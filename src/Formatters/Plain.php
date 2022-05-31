@@ -2,54 +2,41 @@
 
 namespace Differ\Formatters\Plain;
 
-use function Differ\Differ\toString;
+use function Differ\String\toStringTxt;
 
-function formatting(array $replacedArray, array $arr1, array $arr2): string
+function formatting(array $ast): string
 {
-    $iter = function ($currentValue, $path, $partArr1 = [], $partArr2 = []) use (&$iter) {
-        return array_reduce(
-            array_keys($currentValue),
-            function ($acc, $key) use (&$iter, $path, $currentValue, $partArr1, $partArr2) {
-                $newPath = ($path === '') ? "{$key}" : "{$path}.{$key}";
-                $value = $currentValue[$key];
+    $iter = function ($ast, $path) use (&$iter) {
+        return array_reduce($ast, function ($acc, $arr) use ($iter, $path) {
+            $newPath = ($path === '') ? "{$arr['key']}" : "{$path}.{$arr['key']}";
 
-                $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
-                $inArr2 = is_array($partArr2) && array_key_exists($key, $partArr2);
-
-                if (!$inArr1) {
-                    $str = is_array($value) ? '[complex value]' : toStringTxt($value);
-
-                    return array_merge($acc, ["Property '{$newPath}' was added with value: {$str}"]);
+            if ($arr['operation'] === 'not_changed') {
+                if ($arr['type'] === 'object') {
+                    return array_merge($acc, $iter($arr['value'], $newPath));
                 }
+            }
 
-                if (!$inArr2) {
-                    return array_merge($acc, ["Property '{$newPath}' was removed"]);
-                }
+            if ($arr['operation'] === 'added') {
+                $str = $arr['type'] === 'object' ? '[complex value]' : toStringTxt($arr['value']);
 
-                if (is_array($value) && is_array($partArr1[$key])) {
-                    return array_merge($acc, $iter($value, $newPath, $partArr1[$key], $partArr2[$key]));
-                }
+                return array_merge($acc, ["Property '{$newPath}' was added with value: {$str}"]);
+            }
 
-                if ($partArr1[$key] !== $partArr2[$key]) {
-                    $str1 = is_array($partArr1[$key]) ? '[complex value]' : toStringTxt($partArr1[$key]);
-                    $str2 = is_array($partArr2[$key]) ? '[complex value]' : toStringTxt($partArr2[$key]);
+            if ($arr['operation'] === 'deleted') {
+                return array_merge($acc, ["Property '{$newPath}' was removed"]);
+            }
 
-                    return array_merge($acc, ["Property '{$newPath}' was updated. From {$str1} to {$str2}"]);
-                }
+            if ($arr['operation'] === 'changed') {
+                $str1 = $arr['oldType'] === 'object' ? '[complex value]' : toStringTxt($arr['oldValue']);
+                $str2 = $arr['newType'] === 'object' ? '[complex value]' : toStringTxt($arr['newValue']);
 
-                return $acc;
-            },
-            []
-        );
+                return array_merge($acc, ["Property '{$newPath}' was updated. From {$str1} to {$str2}"]);
+            }
+
+            return $acc;
+        }, []);
     };
-    $result = $iter($replacedArray, '', $arr1, $arr2);
+    $result = $iter($ast, '');
 
     return implode("\n", $result);
-}
-
-function toStringTxt(mixed $value): string
-{
-    $string = toString($value);
-
-    return is_string($value) ? "'{$string}'" : $string;
 }

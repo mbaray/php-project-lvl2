@@ -4,15 +4,15 @@ namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parse(string $fileСontent, string $type): array
+function parse(string $fileContent, string $type): array
 {
     switch ($type) {
         case 'json':
-            return json_decode($fileСontent, true);
+            return json_decode($fileContent, true);
 
         case 'yml':
         case 'yaml':
-            return toArrayRecursive(Yaml::parse($fileСontent, Yaml::PARSE_OBJECT_FOR_MAP));
+            return toArrayRecursive(Yaml::parse($fileContent, Yaml::PARSE_OBJECT_FOR_MAP));
 
         default:
             return [];

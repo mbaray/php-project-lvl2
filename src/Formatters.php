@@ -1,11 +1,15 @@
 <?php
 
-namespace Formatters;
+namespace Differ\Formatters;
 
-function formatterSelection(string $formatName, array $replacedArray, array $arr1, array $arr2): string
+const STYLISH = 'stylish';
+const PLAIN = 'plain';
+const JSON = 'json';
+
+function formatterSelection(string $formatName, array $ast): string
 {
     /** @var callable $getFormatting */
     $getFormatting = "\\Differ\\Formatters\\{$formatName}\\formatting";
 
-    return $getFormatting($replacedArray, $arr1, $arr2);
+    return $getFormatting($ast);
 }

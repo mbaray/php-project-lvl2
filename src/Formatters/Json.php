@@ -2,68 +2,37 @@
 
 namespace Differ\Formatters\Json;
 
-use function Differ\Differ\toString;
+use function Differ\String\toString;
 
-function formatting(array $replacedArray, array $arr1, array $arr2): string
+function formatting(array $ast): string
 {
-    $iter = function ($currentValue, $check = false, $partArr1 = [], $partArr2 = []) use (&$iter) {
-        if (!is_array($currentValue)) {
-            return toString($currentValue);
-        }
-
-        return array_reduce(
-            array_keys($currentValue),
-            function ($acc, $key) use (&$iter, $check, $currentValue, $partArr1, $partArr2) {
-                $culVal = $currentValue[$key];
-                $name = $key;
-
-                if ($check === false) {
-                    $child = [
-                        "name" => $name,
-                        "value" => $iter($culVal),
-                    ];
-
-                    return array_merge($acc, [$child]);
-                }
-
-                $inArr1 = is_array($partArr1) && array_key_exists($key, $partArr1);
-                $inArr2 = is_array($partArr2) && array_key_exists($key, $partArr2);
-
-                if (!$inArr1) {
-                    $value = $iter($culVal);
-                    $type = "added";
-                } elseif (!$inArr2) {
-                    $value = $iter($culVal);
-                    $type = "deleted";
-                } elseif (is_array($culVal) && is_array($partArr1[$key])) {
-                    $value = $iter($culVal, true, $partArr1[$key], $partArr2[$key]);
-                    $type = "unaltered";
-                } elseif ($partArr1[$key] !== $partArr2[$key]) {
-                    $child = [
-                        "name" => $name,
-                        "oldValue" => $iter($partArr1[$key]),
-                        "newValue" => $iter($partArr2[$key]),
-                        "type" => "updated"
-                    ];
-
-                    return array_merge($acc, [$child]);
-                } else {
-                    $value = $currentValue[$key];
-                    $type = "unaltered";
-                }
-
-                $child = [
-                    "name" => $name,
-                    "value" => $value,
-                    "type" => $type
+    $iter = function (array $ast) use (&$iter) {
+        return array_map(function ($arr) use ($iter) {
+            if (!array_key_exists('operation', $arr)) {
+                return [
+                    "name" => $arr['key'],
+                    "value" => $arr['type'] === 'object' ? $iter($arr['value']) : toString($arr['value']),
                 ];
+            }
 
-                return array_merge($acc, [$child]);
-            },
-            []
-        );
+            if ($arr['operation'] === 'changed') {
+                return [
+                    "name" => $arr['key'],
+                    "oldValue" => $arr['oldType'] === 'simple' ? toString($arr['oldValue']) : $iter($arr['oldValue']),
+                    "newValue" => $arr['newType'] === 'simple' ? toString($arr['newValue']) : $iter($arr['newValue']),
+                    "type" => 'updated',
+                ];
+            }
+
+            return [
+                "name" => $arr['key'],
+                "value" => $arr['type'] === 'object' ? $iter($arr['value']) : toString($arr['value']),
+                "type" => $arr['operation'] === 'not_changed' ? 'unaltered' : $arr['operation'],
+            ];
+        }, $ast);
     };
-    $result = $iter($replacedArray, true, $arr1, $arr2);
+
+    $result = $iter($ast);
 
     return json_encode($result);
 }
