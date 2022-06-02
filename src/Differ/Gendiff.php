@@ -25,8 +25,8 @@ function makeAst(array $arr1, array $arr2): array
             return $partArr2;
         }
 
-        $current = array_replace($partArr1, $partArr2);
-        $currentValue = sortRecursive($current);
+        $replacedArray = array_replace($partArr1, $partArr2);
+        $currentValue = sortByKeys($replacedArray);
 
         return array_reduce(
             array_keys($currentValue),
@@ -106,13 +106,11 @@ function pathToArray(string $path): array
     return parse($fileContent, $type);
 }
 
-function sortRecursive(array $arr): array
+function sortByKeys(array $arr): array
 {
-    $sortArr = sort(
+    return sort(
         $arr,
         fn($left, $right) => strcmp((string)array_search($left, $arr, true), (string)array_search($right, $arr, true)),
         true
     );
-
-    return $sortArr;
 }
