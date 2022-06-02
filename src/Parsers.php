@@ -24,5 +24,10 @@ function getParser(string $type): callable
         case 'YML':
         case 'YAML':
             return $yaml;
+
+        default:
+            return function (string $fileContent): array {
+                return [];
+            };
     }
 }

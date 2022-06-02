@@ -29,4 +29,10 @@ class GenDiffTest extends TestCase
         $expected = file_get_contents('./tests/fixtures/expectedStylish.txt');
         $this->assertEquals($expected, $actual);
     }
+
+    public function testGenDiffWrongFormat()
+    {
+        $actual = genDiff('./tests/fixtures/expectedStylish.txt', './tests/fixtures/expectedStylish.txt', 'stylish');
+        $this->assertEquals("{\n}", $actual);
+    }
 }
