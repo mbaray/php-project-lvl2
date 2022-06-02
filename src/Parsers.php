@@ -14,6 +14,10 @@ function getParser(string $type): callable
         return Yaml::parse($fileContent);
     };
 
+    $default = function (string $fileContent): array {
+        return [];
+    };
+
     switch ($type) {
         case 'json':
         case 'JSON':
@@ -26,8 +30,6 @@ function getParser(string $type): callable
             return $yaml;
 
         default:
-            return function (string $fileContent): array {
-                return [];
-            };
+            return $default;
     }
 }

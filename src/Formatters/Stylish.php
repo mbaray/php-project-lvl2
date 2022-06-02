@@ -6,7 +6,7 @@ use function Differ\String\toString;
 
 function format(array $ast): string
 {
-    $iter = function ($ast, $depth) use (&$iter) {
+    $iter = function (array $ast, int $depth = 1) use (&$iter) {
         $replacer = ' ';
         $spacesCount = 4;
         $indentSize = ($depth - 1) * $spacesCount;
@@ -38,10 +38,10 @@ function format(array $ast): string
                 return array_merge($acc, [$getLine($arr['oldValue'], '-')], [$getLine($arr['newValue'], '+')]);
             }
         }, []);
-        $result = ['{', ...$lines, "{$indent}}"];
+        $arrayLines = ['{', ...$lines, "{$indent}}"];
 
-        return implode("\n", $result);
+        return implode("\n", $arrayLines);
     };
 
-    return $iter($ast, 1);
+    return $iter($ast);
 }
