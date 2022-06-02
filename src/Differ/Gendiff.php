@@ -103,7 +103,8 @@ function pathToArray(string $path): array
     }
 
     [$fileName, $type] = explode('.', $path);
-    $parser = getParser($type);
+
+    $parser = getParser(mb_strtolower($type));
 
     return $parser($fileContent);
 }

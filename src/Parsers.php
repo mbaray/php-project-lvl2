@@ -20,13 +20,10 @@ function getParser(string $type): callable
 
     switch ($type) {
         case 'json':
-        case 'JSON':
             return $json;
 
         case 'yml':
         case 'yaml':
-        case 'YML':
-        case 'YAML':
             return $yaml;
 
         default:
