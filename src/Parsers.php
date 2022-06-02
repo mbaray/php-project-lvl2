@@ -12,16 +12,9 @@ function parse(string $fileContent, string $type): array
 
         case 'yml':
         case 'yaml':
-            return toArrayRecursive(Yaml::parse($fileContent, Yaml::PARSE_OBJECT_FOR_MAP));
+            return Yaml::parse($fileContent);
 
         default:
             return [];
     }
-}
-
-function toArrayRecursive(object $obj): array
-{
-    $objVars = get_object_vars($obj);
-
-    return array_map(fn($value) => is_object($value) ? toArrayRecursive($value) : $value, $objVars);
 }

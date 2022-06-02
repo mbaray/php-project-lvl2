@@ -2,7 +2,6 @@
 
 namespace Differ\Differ;
 
-use function Functional\sort;
 use function Differ\Parsers\parse;
 use function Differ\Formatters\formatterSelection;
 
@@ -13,31 +12,31 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $formatName = 
     $firstArray = pathToArray($pathToFile1);
     $secondArray = pathToArray($pathToFile2);
 
-    $replacedArray = array_replace_recursive($firstArray, $secondArray);
-    $sortReplacedArray = sortRecursive($replacedArray);
-
-    $ast = makeAst($sortReplacedArray, $firstArray, $secondArray);
+    $ast = makeAst($firstArray, $secondArray);
 
     return formatterSelection($formatName, $ast);
 }
 
-function makeAst(array $replacedArray, array $arr1, array $arr2): array
+function makeAst(array $arr1, array $arr2): array
 {
-    $iter = function ($currentValue, $check = false, $partArr1 = [], $partArr2 = []) use (&$iter) {
-        if (!is_array($currentValue)) {
-            return $currentValue;
+    $iter = function ($partArr1 = [], $partArr2 = [], $check = false) use (&$iter) {
+        if (!is_array($partArr2)) {
+            return $partArr2;
         }
+
+        $currentValue = array_replace($partArr1, $partArr2);
+        ksort($currentValue);
 
         return array_reduce(
             array_keys($currentValue),
-            function ($acc, $key) use (&$iter, $check, $currentValue, $partArr1, $partArr2) {
+            function ($acc, $key) use ($iter, $check, $currentValue, $partArr1, $partArr2) {
                 $culVal = $currentValue[$key];
 
                 if ($check === false) {
                     $child = [
                         "type" => makeType($culVal),
                         "key" => $key,
-                        "value" => $iter($culVal),
+                        "value" => $iter([], $culVal),
                     ];
 
                     return array_merge($acc, [$child]);
@@ -47,13 +46,13 @@ function makeAst(array $replacedArray, array $arr1, array $arr2): array
                 $inArr2 = is_array($partArr2) && array_key_exists($key, $partArr2);
 
                 if (!$inArr1) {
-                    $value = $iter($culVal);
+                    $value = $iter([], $partArr2[$key]);
                     $operation = "added";
                 } elseif (!$inArr2) {
-                    $value = $iter($culVal);
+                    $value = $iter([], $partArr1[$key]);
                     $operation = "deleted";
-                } elseif (is_array($culVal) && is_array($partArr1[$key])) {
-                    $value = $iter($culVal, true, $partArr1[$key], $partArr2[$key]);
+                } elseif (is_array($partArr2[$key]) && is_array($partArr1[$key])) {
+                    $value = $iter($partArr1[$key], $partArr2[$key], true);
                     $operation = "not_changed";
                 } elseif ($partArr1[$key] !== $partArr2[$key]) {
                     $child = [
@@ -61,8 +60,8 @@ function makeAst(array $replacedArray, array $arr1, array $arr2): array
                         "oldType" => makeType($partArr1[$key]),
                         "newType" => makeType($partArr2[$key]),
                         "key" => $key,
-                        "oldValue" => $iter($partArr1[$key]),
-                        "newValue" => $iter($partArr2[$key]),
+                        "oldValue" => $iter([], $partArr1[$key]),
+                        "newValue" => $iter([], $partArr2[$key]),
                     ];
 
                     return array_merge($acc, [$child]);
@@ -83,7 +82,7 @@ function makeAst(array $replacedArray, array $arr1, array $arr2): array
             []
         );
     };
-    $result = $iter($replacedArray, true, $arr1, $arr2);
+    $result = $iter($arr1, $arr2, true);
 
     return $result;
 }
@@ -104,15 +103,4 @@ function pathToArray(string $path): array
     [$fileName, $type] = explode('.', $path);
 
     return parse($fileContent, $type);
-}
-
-function sortRecursive(array $arr): array
-{
-    $sortArr = sort(
-        $arr,
-        fn($left, $right) => strcmp((string)array_search($left, $arr, true), (string)array_search($right, $arr, true)),
-        true
-    );
-
-    return array_map(fn($value) => is_array($value) ? sortRecursive($value) : $value, $sortArr);
 }
