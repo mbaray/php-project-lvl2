@@ -4,7 +4,7 @@ namespace Differ\Formatters\Stylish;
 
 use function Differ\String\toString;
 
-function formatting(array $ast): string
+function format(array $ast): string
 {
     $iter = function ($ast, $depth) use (&$iter) {
         $replacer = ' ';

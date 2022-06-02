@@ -4,17 +4,25 @@ namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parse(string $fileContent, string $type): array
+function getParser(string $type): callable
 {
+    $json = function (string $fileContent): array {
+        return json_decode($fileContent, true);
+    };
+
+    $yaml = function (string $fileContent): array {
+        return Yaml::parse($fileContent);
+    };
+
     switch ($type) {
         case 'json':
-            return json_decode($fileContent, true);
+        case 'JSON':
+            return $json;
 
         case 'yml':
         case 'yaml':
-            return Yaml::parse($fileContent);
-
-        default:
-            return [];
+        case 'YML':
+        case 'YAML':
+            return $yaml;
     }
 }

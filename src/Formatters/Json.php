@@ -4,7 +4,7 @@ namespace Differ\Formatters\Json;
 
 use function Differ\String\toString;
 
-function formatting(array $ast): string
+function format(array $ast): string
 {
     $iter = function (array $ast) use (&$iter) {
         return array_map(function ($arr) use ($iter) {

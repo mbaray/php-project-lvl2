@@ -14,10 +14,10 @@ test-coverage:
 	XDEBUG_MODE=coverage composer exec --verbose phpunit tests -- --coverage-clover build/logs/clover.xml
 
 stylish:
-	bin/gendiff tests/fixtures/json/file1.json tests/fixtures/json/file2.json
+	bin/gendiff tests/fixtures/json/file1.JSON tests/fixtures/json/file2.json
 
 plain:
-	bin/gendiff --format plain tests/fixtures/json/file1.json tests/fixtures/json/file2.json
+	bin/gendiff --format plain tests/fixtures/json/file1.JSON tests/fixtures/json/file2.json
 
 json:
-	bin/gendiff --format json tests/fixtures/json/file1.json tests/fixtures/json/file2.json
+	bin/gendiff --format json tests/fixtures/json/file1.JSON tests/fixtures/json/file2.json

@@ -4,7 +4,7 @@ namespace Differ\Formatters\Plain;
 
 use function Differ\String\toStringTxt;
 
-function formatting(array $ast): string
+function format(array $ast): string
 {
     $iter = function ($ast, $path) use (&$iter) {
         return array_reduce($ast, function ($acc, $arr) use ($iter, $path) {

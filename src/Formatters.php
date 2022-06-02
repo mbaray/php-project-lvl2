@@ -6,10 +6,10 @@ const STYLISH = 'stylish';
 const PLAIN = 'plain';
 const JSON = 'json';
 
-function formatterSelection(string $formatName, array $ast): string
+function getFormatter(string $format): callable
 {
-    /** @var callable $getFormatting */
-    $getFormatting = "\\Differ\\Formatters\\{$formatName}\\formatting";
+    /** @var callable $getFormatter */
+    $getFormatter = "\\Differ\\Formatters\\{$format}\\format";
 
-    return $getFormatting($ast);
+    return $getFormatter;
 }

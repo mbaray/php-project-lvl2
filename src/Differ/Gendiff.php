@@ -3,8 +3,8 @@
 namespace Differ\Differ;
 
 use function Functional\sort;
-use function Differ\Parsers\parse;
-use function Differ\Formatters\formatterSelection;
+use function Differ\Parsers\getParser;
+use function Differ\Formatters\getFormatter;
 
 use const Differ\Formatters\STYLISH;
 
@@ -14,8 +14,9 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $formatName = 
     $secondArray = pathToArray($pathToFile2);
 
     $ast = makeAst($firstArray, $secondArray);
+    $formatter = getFormatter($formatName);
 
-    return formatterSelection($formatName, $ast);
+    return $formatter($ast);
 }
 
 function makeAst(array $arr1, array $arr2): array
@@ -102,8 +103,9 @@ function pathToArray(string $path): array
     }
 
     [$fileName, $type] = explode('.', $path);
+    $parser = getParser($type);
 
-    return parse($fileContent, $type);
+    return $parser($fileContent);
 }
 
 function sortByKeys(array $arr): array
