@@ -3,30 +3,13 @@
 namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
+use InvalidArgumentException;
 
 function getParser(string $type): callable
 {
-    $json = function (string $fileContent): array {
-        return json_decode($fileContent, true);
+    return match (strtolower($type)) {
+        'yml', 'yaml' => fn(string $yaml) => Yaml::parse($yaml),
+        'json' => fn(string $json) => json_decode($json, true),
+        default => throw new InvalidArgumentException("Format {$type} is not supported"),
     };
-
-    $yaml = function (string $fileContent): array {
-        return Yaml::parse($fileContent);
-    };
-
-    $default = function (string $fileContent): array {
-        return [];
-    };
-
-    switch ($type) {
-        case 'json':
-            return $json;
-
-        case 'yml':
-        case 'yaml':
-            return $yaml;
-
-        default:
-            return $default;
-    }
 }

@@ -10,8 +10,8 @@ use const Differ\Formatters\STYLISH;
 
 function genDiff(string $pathToFile1, string $pathToFile2, string $formatName = STYLISH): string
 {
-    $firstArray = pathToArray($pathToFile1);
-    $secondArray = pathToArray($pathToFile2);
+    $firstArray = getContent($pathToFile1);
+    $secondArray = getContent($pathToFile2);
 
     $ast = makeAst($firstArray, $secondArray);
     $formatter = getFormatter($formatName);
@@ -84,9 +84,8 @@ function makeAst(array $arr1, array $arr2): array
             []
         );
     };
-    $result = $iter($arr1, $arr2, true);
 
-    return $result;
+    return $iter($arr1, $arr2, true);
 }
 
 function makeType(mixed $value): string
@@ -94,7 +93,7 @@ function makeType(mixed $value): string
     return is_array($value) ? 'object' : 'simple';
 }
 
-function pathToArray(string $path): array
+function getContent(string $path): array
 {
     $fileContent = file_get_contents($path);
 
@@ -104,7 +103,7 @@ function pathToArray(string $path): array
 
     [$fileName, $type] = explode('.', $path);
 
-    $parser = getParser(mb_strtolower($type));
+    $parser = getParser($type);
 
     return $parser($fileContent);
 }
