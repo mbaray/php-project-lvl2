@@ -10,24 +10,24 @@ function format(array $ast): string
         return array_map(function ($arr) use ($iter) {
             if (!array_key_exists('operation', $arr)) {
                 return [
-                    "name" => $arr['key'],
-                    "value" => $arr['type'] === 'object' ? $iter($arr['value']) : toString($arr['value']),
+                    'name' => $arr['key'],
+                    'value' => $arr['type'] === 'object' ? $iter($arr['value']) : toString($arr['value']),
                 ];
             }
 
             if ($arr['operation'] === 'changed') {
                 return [
-                    "name" => $arr['key'],
-                    "oldValue" => $arr['oldType'] === 'simple' ? toString($arr['oldValue']) : $iter($arr['oldValue']),
-                    "newValue" => $arr['newType'] === 'simple' ? toString($arr['newValue']) : $iter($arr['newValue']),
-                    "type" => 'updated',
+                    'name' => $arr['key'],
+                    'oldValue' => $arr['oldType'] === 'simple' ? toString($arr['oldValue']) : $iter($arr['oldValue']),
+                    'newValue' => $arr['newType'] === 'simple' ? toString($arr['newValue']) : $iter($arr['newValue']),
+                    'type' => 'updated',
                 ];
             }
 
             return [
-                "name" => $arr['key'],
-                "value" => $arr['type'] === 'object' ? $iter($arr['value']) : toString($arr['value']),
-                "type" => $arr['operation'] === 'not_changed' ? 'unaltered' : $arr['operation'],
+                'name' => $arr['key'],
+                'value' => $arr['type'] === 'object' ? $iter($arr['value']) : toString($arr['value']),
+                'type' => $arr['operation'] === 'not_changed' ? 'unaltered' : $arr['operation'],
             ];
         }, $ast);
     };
