@@ -3,6 +3,10 @@
 namespace Differ\Formatters\Stylish;
 
 use function Differ\String\toString;
+use function Differ\Tree\isDeleted;
+use function Differ\Tree\isChanged;
+use function Differ\Tree\notChanged;
+use function Differ\Tree\getKey;
 
 function format(array $ast): string
 {
@@ -14,29 +18,28 @@ function format(array $ast): string
 
         $lines = array_reduce($ast, function ($acc, $arr) use ($iter, $depth, $indent) {
             $getLine = function ($curVal, $symbol) use ($indent, $arr, $iter, $depth) {
+                $key = getKey($arr);
                 if (!is_array($curVal)) {
                     $str = toString($curVal);
 
-                    return "{$indent}  {$symbol} {$arr['key']}: {$str}";
+                    return "{$indent}  {$symbol} {$key}: {$str}";
                 }
-                return "{$indent}  {$symbol} {$arr['key']}: {$iter($curVal, $depth + 1)}";
+                return "{$indent}  {$symbol} {$key}: {$iter($curVal, $depth + 1)}";
             };
 
-            if (!array_key_exists('operation', $arr) || $arr['operation'] === 'not_changed') {
+            if (notChanged($arr)) {
                 return array_merge($acc, [$getLine($arr['value'], ' ')]);
             }
 
-            if ($arr['operation'] === 'added') {
-                return array_merge($acc, [$getLine($arr['value'], '+')]);
-            }
-
-            if ($arr['operation'] === 'deleted') {
+            if (isDeleted($arr)) {
                 return array_merge($acc, [$getLine($arr['value'], '-')]);
             }
 
-            if ($arr['operation'] === 'changed') {
+            if (isChanged($arr)) {
                 return array_merge($acc, [$getLine($arr['oldValue'], '-')], [$getLine($arr['newValue'], '+')]);
             }
+
+            return array_merge($acc, [$getLine($arr['value'], '+')]);
         }, []);
         $arrayLines = ['{', ...$lines, "{$indent}}"];
 
