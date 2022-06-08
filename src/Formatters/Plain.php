@@ -51,5 +51,5 @@ function format(array $ast): string
 
 function generateString(mixed $value): string
 {
-    return is_array($value) ? '[complex value]' : toStringTxt($value);
+    return isObject($value) ? '[complex value]' : toStringTxt($value);
 }
