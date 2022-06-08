@@ -3,32 +3,40 @@
 namespace Differ\Formatters\Plain;
 
 use function Differ\String\toStringTxt;
+use function Differ\Tree\isDeleted;
+use function Differ\Tree\isChanged;
+use function Differ\Tree\isAdded;
+use function Differ\Tree\notChanged;
+use function Differ\Tree\getKey;
+use function Differ\Tree\getValue;
+use function Differ\Tree\getOldValue;
+use function Differ\Tree\getNewValue;
+use function Differ\Tree\isObject;
 
 function format(array $ast): string
 {
     $iter = function ($ast, $path) use (&$iter) {
-        return array_reduce($ast, function ($acc, $arr) use ($iter, $path) {
-            $newPath = ($path === '') ? "{$arr['key']}" : "{$path}.{$arr['key']}";
+        return array_reduce($ast, function ($acc, $node) use ($iter, $path) {
+            $key = getKey($node);
+            $newPath = ($path === '') ? "{$key}" : "{$path}.{$key}";
 
-            if ($arr['operation'] === 'not_changed') {
-                if ($arr['type'] === 'object') {
-                    return array_merge($acc, $iter($arr['value'], $newPath));
-                }
+            if (notChanged($node) && isObject(getValue($node))) {
+                return array_merge($acc, $iter(getValue($node), $newPath));
             }
 
-            if ($arr['operation'] === 'added') {
-                $str = $arr['type'] === 'object' ? '[complex value]' : toStringTxt($arr['value']);
+            if (isAdded($node)) {
+                $str = generateString(getValue($node));
 
                 return array_merge($acc, ["Property '{$newPath}' was added with value: {$str}"]);
             }
 
-            if ($arr['operation'] === 'deleted') {
+            if (isDeleted($node)) {
                 return array_merge($acc, ["Property '{$newPath}' was removed"]);
             }
 
-            if ($arr['operation'] === 'changed') {
-                $str1 = $arr['oldType'] === 'object' ? '[complex value]' : toStringTxt($arr['oldValue']);
-                $str2 = $arr['newType'] === 'object' ? '[complex value]' : toStringTxt($arr['newValue']);
+            if (isChanged($node)) {
+                $str1 = generateString(getOldValue($node));
+                $str2 = generateString(getNewValue($node));
 
                 return array_merge($acc, ["Property '{$newPath}' was updated. From {$str1} to {$str2}"]);
             }
@@ -39,4 +47,9 @@ function format(array $ast): string
     $result = $iter($ast, '');
 
     return implode("\n", $result);
+}
+
+function generateString(mixed $value): string
+{
+    return is_array($value) ? '[complex value]' : toStringTxt($value);
 }

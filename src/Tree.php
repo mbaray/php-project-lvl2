@@ -36,39 +36,57 @@ function makeNode(string $key, mixed $value, string $operation = ''): array
     }
 }
 
-function getKey(array $arr): string
+function getKey(array $node): string
 {
-    return $arr['key'];
+    return $node['key'];
 }
 
-// function getValue(array $arr)
-// {
-//     if () {
-
-//     }
-// }
-
-function getOperation(array $arr): string
+function getValue(array $node): mixed
 {
-    return $arr['operation'];
+    return $node['value'];
 }
 
-function isDeleted(array $arr): bool
+function getOldValue(array $node): mixed
 {
-    return getOperation($arr) === 'deleted';
+    return $node['oldValue'];
 }
 
-function isChanged(array $arr): bool
+function getNewValue(array $node): mixed
 {
-    return getOperation($arr) === 'changed';
+    return $node['newValue'];
 }
 
-function notChanged(array $arr): bool
+function getOperation(array $node): string
 {
-    return !array_key_exists('operation', $arr) || getOperation($arr) === 'not_changed';
+    return $node['operation'];
+}
+
+function isAdded(array $node): bool
+{
+    return getOperation($node) === 'added';
+}
+
+function isDeleted(array $node): bool
+{
+    return getOperation($node) === 'deleted';
+}
+
+function isChanged(array $node): bool
+{
+    return getOperation($node) === 'changed';
+}
+
+function notChanged(array $node): bool
+{
+    return getOperation($node) === 'not_changed';
+}
+
+function isObject(mixed $value): bool
+{
+    return is_array($value);
 }
 
 function makeType(mixed $value): string
 {
-    return is_array($value) ? 'object' : 'simple';
+    return isObject($value) ? 'object' : 'simple';
 }

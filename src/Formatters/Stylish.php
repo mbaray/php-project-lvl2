@@ -7,6 +7,10 @@ use function Differ\Tree\isDeleted;
 use function Differ\Tree\isChanged;
 use function Differ\Tree\notChanged;
 use function Differ\Tree\getKey;
+use function Differ\Tree\getValue;
+use function Differ\Tree\getOldValue;
+use function Differ\Tree\getNewValue;
+use function Differ\Tree\isObject;
 
 function format(array $ast): string
 {
@@ -16,30 +20,30 @@ function format(array $ast): string
         $indentSize = ($depth - 1) * $spacesCount;
         $indent = str_repeat($replacer, $indentSize);
 
-        $lines = array_reduce($ast, function ($acc, $arr) use ($iter, $depth, $indent) {
-            $getLine = function ($curVal, $symbol) use ($indent, $arr, $iter, $depth) {
-                $key = getKey($arr);
-                if (!is_array($curVal)) {
-                    $str = toString($curVal);
-
-                    return "{$indent}  {$symbol} {$key}: {$str}";
+        $lines = array_reduce($ast, function ($acc, $node) use ($iter, $depth, $indent) {
+            $getLine = function ($value, $symbol) use ($indent, $node, $iter, $depth) {
+                $key = getKey($node);
+                if (isObject($value)) {
+                    return "{$indent}  {$symbol} {$key}: {$iter($value, $depth + 1)}";
                 }
-                return "{$indent}  {$symbol} {$key}: {$iter($curVal, $depth + 1)}";
+                $str = toString($value);
+
+                return "{$indent}  {$symbol} {$key}: {$str}";
             };
 
-            if (notChanged($arr)) {
-                return array_merge($acc, [$getLine($arr['value'], ' ')]);
+            if (!array_key_exists('operation', $node) || notChanged($node)) {
+                return array_merge($acc, [$getLine(getValue($node), ' ')]);
             }
 
-            if (isDeleted($arr)) {
-                return array_merge($acc, [$getLine($arr['value'], '-')]);
+            if (isDeleted($node)) {
+                return array_merge($acc, [$getLine(getValue($node), '-')]);
             }
 
-            if (isChanged($arr)) {
-                return array_merge($acc, [$getLine($arr['oldValue'], '-')], [$getLine($arr['newValue'], '+')]);
+            if (isChanged($node)) {
+                return array_merge($acc, [$getLine(getOldValue($node), '-')], [$getLine(getNewValue($node), '+')]);
             }
 
-            return array_merge($acc, [$getLine($arr['value'], '+')]);
+            return array_merge($acc, [$getLine(getValue($node), '+')]);
         }, []);
         $arrayLines = ['{', ...$lines, "{$indent}}"];
 

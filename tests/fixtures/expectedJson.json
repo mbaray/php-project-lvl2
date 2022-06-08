@@ -1,143 +1,174 @@
 [
   {
-    "name": "common",
+    "operation": "not_changed",
+    "type": "object",
+    "key": "common",
     "value": [
       {
-        "name": "follow",
-        "value": "false",
-        "type": "added"
+        "operation": "added",
+        "type": "simple",
+        "key": "follow",
+        "value": false
       },
       {
-        "name": "setting1",
-        "value": "Value 1",
-        "type": "unaltered"
+        "operation": "not_changed",
+        "type": "simple",
+        "key": "setting1",
+        "value": "Value 1"
       },
       {
-        "name": "setting2",
-        "value": "200",
-        "type": "deleted"
+        "operation": "deleted",
+        "type": "simple",
+        "key": "setting2",
+        "value": 200
       },
       {
-        "name": "setting3",
-        "oldValue": "true",
-        "newValue": "null",
-        "type": "updated"
+        "operation": "changed",
+        "oldType": "simple",
+        "newType": "simple",
+        "key": "setting3",
+        "oldValue": true,
+        "newValue": null
       },
       {
-        "name": "setting4",
-        "value": "blah blah",
-        "type": "added"
+        "operation": "added",
+        "type": "simple",
+        "key": "setting4",
+        "value": "blah blah"
       },
       {
-        "name": "setting5",
+        "operation": "added",
+        "type": "object",
+        "key": "setting5",
         "value": [
           {
-            "name": "key5",
+            "type": "simple",
+            "key": "key5",
             "value": "value5"
           }
-        ],
-        "type": "added"
+        ]
       },
       {
-        "name": "setting6",
+        "operation": "not_changed",
+        "type": "object",
+        "key": "setting6",
         "value": [
           {
-            "name": "doge",
+            "operation": "not_changed",
+            "type": "object",
+            "key": "doge",
             "value": [
               {
-                "name": "wow",
+                "operation": "changed",
+                "oldType": "simple",
+                "newType": "simple",
+                "key": "wow",
                 "oldValue": "",
-                "newValue": "so much",
-                "type": "updated"
+                "newValue": "so much"
               }
-            ],
-            "type": "unaltered"
-            },
-            {
-              "name": "key",
-              "value": "value",
-              "type": "unaltered"
-            },
-            {
-              "name": "ops",
-              "value": "vops",
-              "type": "added"
-            }
-          ],
-          "type": "unaltered"
-        }
-      ],
-      "type": "unaltered"
-    },
-    {
-      "name": "group1",
-      "value": [
-        {
-          "name": "baz",
-          "oldValue": "bas",
-          "newValue": "bars",
-          "type": "updated"
-        },
-        {
-          "name": "foo",
-          "value": "bar",
-          "type": "unaltered"
-        },
-        {
-          "name": "nest",
-          "oldValue": [
-            {
-              "name": "key",
-              "value": "value"
-            }
-          ],
-          "newValue": "str",
-          "type": "updated"
-        }
-      ],
-      "type": "unaltered"
-    },
-    {
-      "name": "group2",
-      "value": [
-        {
-          "name": "abc",
-          "value": "12345"
-        },
-        {
-          "name": "deep",
-          "value": [
-            {
-              "name": "id",
-              "value": "45"
-            }
-          ]
-        }
-      ],
-      "type": "deleted"
-    },
-    {
-      "name": "group3",
-      "value": [
-        {
-          "name": "deep",
-          "value": [
-            {
-              "name": "id",
-              "value": [
-                {
-                  "name": "number",
-                  "value": "45"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "fee",
-          "value": "100500"
-        }
-      ],
-      "type": "added"
-    }
+            ]
+          },
+          {
+            "operation": "not_changed",
+            "type": "simple",
+            "key": "key",
+            "value": "value"
+          },
+          {
+            "operation": "added",
+            "type": "simple",
+            "key": "ops",
+            "value": "vops"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "operation": "not_changed",
+    "type": "object",
+    "key": "group1",
+    "value": [
+      {
+        "operation": "changed",
+        "oldType": "simple",
+        "newType": "simple",
+        "key": "baz",
+        "oldValue": "bas",
+        "newValue": "bars"
+      },
+      {
+        "operation": "not_changed",
+        "type": "simple",
+        "key": "foo",
+        "value": "bar"
+      },
+      {
+        "operation": "changed",
+        "oldType": "object",
+        "newType": "simple",
+        "key": "nest",
+        "oldValue": [
+          {
+            "type": "simple",
+            "key": "key",
+            "value": "value"
+          }
+        ],
+        "newValue": "str"
+      }
+    ]
+  },
+  {
+    "operation": "deleted",
+    "type": "object",
+    "key": "group2",
+    "value": [
+      {
+        "type": "simple",
+        "key": "abc",
+        "value": 12345
+      },
+      {
+        "type": "object",
+        "key": "deep",
+        "value": [
+          {
+            "type": "simple",
+            "key": "id",
+            "value": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "operation": "added",
+    "type": "object",
+    "key": "group3",
+    "value": [
+      {
+        "type": "object",
+        "key": "deep",
+        "value": [
+          {
+            "type": "object",
+            "key": "id",
+            "value": [
+              {
+                "type": "simple",
+                "key": "number",
+                "value": 45
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "simple",
+        "key": "fee",
+        "value": 100500
+      }
+    ]
+  }
 ]
